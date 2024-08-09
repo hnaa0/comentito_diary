@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"comentito-diary","appId":"1:804566012960:android:ec4d3a36a9fabf314b5845","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"comentito-diary","configurations":{"android":"1:804566012960:android:ec4d3a36a9fabf314b5845","ios":"1:804566012960:ios:db8ab409fc39c6f84b5845"}}}}}}
