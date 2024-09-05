@@ -1,15 +1,22 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/authentication/repos/auth_repository.dart';
+import 'package:comentito_diary/features/home/views/home_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/onboarding_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class LoadingScreen extends StatefulWidget {
+class LoadingScreen extends ConsumerStatefulWidget {
+  static const routeUrl = "/loading";
+  static const routeName = "loading";
+
   const LoadingScreen({super.key});
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  ConsumerState<LoadingScreen> createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen>
+class _LoadingScreenState extends ConsumerState<LoadingScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController = AnimationController(
       vsync: this,
@@ -27,17 +34,25 @@ class _LoadingScreenState extends State<LoadingScreen>
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-      const Duration(milliseconds: 2500),
-      () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const OnboardingScreen(),
-          ),
-        );
-      },
-    );
+    checkLoginStatus();
+  }
+
+  Future<void> checkLoginStatus() async {
+    await Future.delayed(const Duration(milliseconds: 2500), () {
+      final isLoggedIn = ref.read(authRepo).isLoggedIn;
+
+      if (isLoggedIn) {
+        context.go(HomeScreen.routeUrl);
+      } else {
+        context.go(OnboardingScreen.routeUrl);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override

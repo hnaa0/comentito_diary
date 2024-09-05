@@ -1,4 +1,5 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/authentication/views/sign_in_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/widgets/page_1.dart';
 import 'package:comentito_diary/features/onboarding/views/widgets/page_2.dart';
 import 'package:comentito_diary/features/onboarding/views/widgets/page_3.dart';
@@ -8,6 +9,9 @@ import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  static const routeUrl = "/on-boarding";
+  static const routeName = "on-boarding";
+
   const OnboardingScreen({super.key});
 
   @override
@@ -24,7 +28,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
   }
 
-  void _onStartTap() {}
+  void _onStartTap() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignInScreen(),
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
