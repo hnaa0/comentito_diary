@@ -1,4 +1,5 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/views/day_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -34,6 +35,15 @@ class _HomeCalendarState extends State<HomeCalendar> {
         ],
       ),
       child: TableCalendar(
+        onDaySelected: (selectedDay, focusedDay) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DayScreen(
+                  selectedDay: selectedDay,
+                ),
+              ));
+        },
         focusedDay: today,
         firstDay: firstDay,
         lastDay: lastDay,
