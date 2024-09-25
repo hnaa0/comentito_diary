@@ -1,5 +1,6 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
-import 'package:comentito_diary/features/home/views/widets/comentito_card.dart';
+import 'package:comentito_diary/features/home/views/detail_screen.dart';
+import 'package:comentito_diary/features/home/views/widgets/comentito_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -58,16 +59,19 @@ class DayScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
           vertical: 40,
           horizontal: 32,
         ),
         child: Column(
           children: [
-            ComentitoCard(),
-            Gap(20),
-            ComentitoCard(),
+            GestureDetector(
+              onTap: () => context.pushNamed(DetailScreen.routeName),
+              child: const ComentitoCard(),
+            ),
+            const Gap(20),
+            const ComentitoCard(),
           ],
         ),
       ),

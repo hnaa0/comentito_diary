@@ -1,6 +1,6 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
-import 'package:comentito_diary/features/home/views/widets/end_drawer.dart';
-import 'package:comentito_diary/features/home/views/widets/home_calendar.dart';
+import 'package:comentito_diary/features/home/views/widgets/end_drawer.dart';
+import 'package:comentito_diary/features/home/views/widgets/home_calendar.dart';
 import 'package:customizable_text/customizable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

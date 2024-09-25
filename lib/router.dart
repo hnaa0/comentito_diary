@@ -1,6 +1,7 @@
 import 'package:comentito_diary/features/authentication/views/sign_in_screen.dart';
 import 'package:comentito_diary/features/authentication/views/sign_up_screen.dart';
 import 'package:comentito_diary/features/home/views/day_screen.dart';
+import 'package:comentito_diary/features/home/views/detail_screen.dart';
 import 'package:comentito_diary/features/home/views/home_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/loading_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/onboarding_screen.dart';
@@ -43,7 +44,14 @@ final routerProvider = Provider((ref) {
               final selectedDay = state.extra as DateTime;
               return DayScreen(selectedDay: selectedDay);
             },
-          )
+            routes: [
+              GoRoute(
+                path: DetailScreen.routeUrl,
+                name: DetailScreen.routeName,
+                builder: (context, state) => const DetailScreen(),
+              ),
+            ],
+          ),
         ],
       ),
     ],
