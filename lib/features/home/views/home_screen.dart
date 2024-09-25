@@ -1,6 +1,7 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
 import 'package:comentito_diary/features/home/views/widgets/end_drawer.dart';
 import 'package:comentito_diary/features/home/views/widgets/home_calendar.dart';
+import 'package:comentito_diary/features/home/views/widgets/write_bottomsheet.dart';
 import 'package:customizable_text/customizable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -197,28 +198,45 @@ class HomeScreen extends StatelessWidget {
             Positioned(
               right: 30,
               bottom: 30,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                height: MediaQuery.of(context).size.width * 0.2,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(
-                    ThemeColors.mintBlue,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(
-                        ThemeColors.grey_200,
-                      ),
-                      blurRadius: 6,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  showModalBottomSheet(
+                    backgroundColor: const Color(
+                      ThemeColors.mintCream,
                     ),
-                  ],
-                ),
-                child: SvgPicture.asset(
-                  "assets/icons/add.svg",
-                  colorFilter: const ColorFilter.mode(
-                    Color(ThemeColors.white),
-                    BlendMode.srcIn,
+                    isScrollControlled: true,
+                    showDragHandle: true,
+                    elevation: 0,
+                    context: context,
+                    builder: (context) {
+                      return const WriteBottomsheet();
+                    },
+                  );
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.width * 0.2,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(
+                      ThemeColors.mintBlue,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(
+                          ThemeColors.grey_200,
+                        ),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: SvgPicture.asset(
+                    "assets/icons/add.svg",
+                    colorFilter: const ColorFilter.mode(
+                      Color(ThemeColors.white),
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
