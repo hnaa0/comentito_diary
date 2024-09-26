@@ -1,9 +1,12 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/movie_model.dart';
+import 'package:comentito_diary/features/home/views/search_movie_screen.dart';
 import 'package:comentito_diary/features/home/views/widgets/watch_with_list.dart';
 import 'package:comentito_diary/features/home/views/widgets/weather_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class WriteBottomsheet extends StatefulWidget {
   const WriteBottomsheet({super.key});
@@ -15,6 +18,13 @@ class WriteBottomsheet extends StatefulWidget {
 class _WriteBottomsheetState extends State<WriteBottomsheet> {
   int _seletedWeatherIdx = 0;
   int _seletedWithIdx = 0;
+  late MovieModel _selectedMovie = MovieModel.empty();
+
+  void _onXTap() {
+    setState(() {
+      _selectedMovie = MovieModel.empty();
+    });
+  }
 
   void _onWeatherTap(int index) {
     setState(() {
@@ -67,28 +77,54 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                     ),
                   ),
                   const Gap(14),
-                  Container(
-                    width: 150,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: const Color(
-                        ThemeColors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      final movie =
+                          await context.pushNamed(SearchMovieScreen.routeName);
+
+                      if (movie != null) {
+                        _selectedMovie = movie as MovieModel;
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
                       ),
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(
-                            ThemeColors.grey_200,
-                          ),
-                          blurRadius: 1,
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: const Color(
+                          ThemeColors.white,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(
+                              ThemeColors.grey_200,
+                            ),
+                            blurRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                          softWrap: false,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          _selectedMovie.originalTitle,
+                        ),
+                      ),
                     ),
                   ),
                   const Gap(10),
-                  SvgPicture.asset(
-                    "assets/icons/x.svg",
-                    width: 18,
+                  GestureDetector(
+                    onTap: _onXTap,
+                    child: SvgPicture.asset(
+                      "assets/icons/x.svg",
+                      width: 18,
+                    ),
                   ),
                 ],
               ),
@@ -106,7 +142,7 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                   ),
                   const Gap(14),
                   Container(
-                    width: 150,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     height: 30,
                     decoration: BoxDecoration(
                       color: const Color(

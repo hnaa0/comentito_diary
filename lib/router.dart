@@ -3,6 +3,7 @@ import 'package:comentito_diary/features/authentication/views/sign_up_screen.dar
 import 'package:comentito_diary/features/home/views/day_screen.dart';
 import 'package:comentito_diary/features/home/views/detail_screen.dart';
 import 'package:comentito_diary/features/home/views/home_screen.dart';
+import 'package:comentito_diary/features/home/views/search_movie_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/loading_screen.dart';
 import 'package:comentito_diary/features/onboarding/views/onboarding_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +52,11 @@ final routerProvider = Provider((ref) {
                 builder: (context, state) => const DetailScreen(),
               ),
             ],
+          ),
+          GoRoute(
+            path: SearchMovieScreen.routeUrl,
+            name: SearchMovieScreen.routeName,
+            builder: (context, state) => const SearchMovieScreen(),
           ),
         ],
       ),
