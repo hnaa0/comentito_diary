@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class WriteBottomsheet extends StatefulWidget {
   const WriteBottomsheet({super.key});
@@ -18,7 +19,9 @@ class WriteBottomsheet extends StatefulWidget {
 class _WriteBottomsheetState extends State<WriteBottomsheet> {
   int _seletedWeatherIdx = 0;
   int _seletedWithIdx = 0;
-  late MovieModel _selectedMovie = MovieModel.empty();
+  DateTime _selectedDate = DateTime(0);
+  MovieModel _selectedMovie = MovieModel.empty();
+  final DateTime today = DateTime.now();
 
   void _onXTap() {
     setState(() {
@@ -36,6 +39,37 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
     setState(() {
       _seletedWithIdx = index;
     });
+  }
+
+  Future<void> _onDateTap() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      confirmText: "확인",
+      cancelText: "취소",
+      firstDate: DateTime(today.year),
+      lastDate: today,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(
+                ThemeColors.green,
+              ),
+            ),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
+            ),
+          ),
+          child: child ?? Container(),
+        );
+      },
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -141,22 +175,34 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                     ),
                   ),
                   const Gap(14),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: const Color(
-                        ThemeColors.white,
+                  GestureDetector(
+                    onTap: _onDateTap,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
                       ),
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(
-                            ThemeColors.grey_200,
-                          ),
-                          blurRadius: 1,
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: const Color(
+                          ThemeColors.white,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(
+                              ThemeColors.grey_200,
+                            ),
+                            blurRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        _selectedDate == DateTime(0)
+                            ? ""
+                            : (DateFormat("yyyy/MM/dd")).format(_selectedDate),
+                      ),
                     ),
                   ),
                   const Gap(10),
