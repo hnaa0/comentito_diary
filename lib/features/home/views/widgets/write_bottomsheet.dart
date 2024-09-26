@@ -1,27 +1,33 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
 import 'package:comentito_diary/features/home/models/movie_model.dart';
+import 'package:comentito_diary/features/home/models/weather_type.dart';
+import 'package:comentito_diary/features/home/view_models/upload_comentito_view_model.dart';
 import 'package:comentito_diary/features/home/views/search_movie_screen.dart';
 import 'package:comentito_diary/features/home/views/widgets/watch_with_list.dart';
 import 'package:comentito_diary/features/home/views/widgets/weather_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class WriteBottomsheet extends StatefulWidget {
+class WriteBottomsheet extends ConsumerStatefulWidget {
   const WriteBottomsheet({super.key});
 
   @override
-  State<WriteBottomsheet> createState() => _WriteBottomsheetState();
+  ConsumerState<WriteBottomsheet> createState() => _WriteBottomsheetState();
 }
 
-class _WriteBottomsheetState extends State<WriteBottomsheet> {
+class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
   int _seletedWeatherIdx = 0;
   int _seletedWithIdx = 0;
   DateTime _selectedDate = DateTime(0);
   MovieModel _selectedMovie = MovieModel.empty();
   final DateTime today = DateTime.now();
+  final TextEditingController _textController = TextEditingController();
+  final Map<String, dynamic> _formData = {};
 
   void _onXTap() {
     setState(() {
@@ -29,16 +35,56 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
     });
   }
 
-  void _onWeatherTap(int index) {
+  void _onWeatherTap({required int index, required String weather}) {
     setState(() {
       _seletedWeatherIdx = index;
+      _formData["weather"] = weather.toString();
     });
   }
 
-  void _onWithTap(int index) {
+  void _onWithTap({required int index, required String watchWith}) {
     setState(() {
       _seletedWithIdx = index;
+      _formData["watchWith"] = watchWith;
     });
+  }
+
+  void _onSaveTap() {
+    if (_selectedDate == DateTime(0) || _selectedMovie == MovieModel.empty()) {
+      return;
+    }
+
+    if (_formData["weather"] == null) {
+      _formData["weather"] = WeatherType.values[_seletedWeatherIdx].name;
+    }
+    if (_formData["watchWith"] == null) {
+      _formData["watchWith"] = "혼자";
+    }
+
+    if (_textController.text.isNotEmpty) {
+      _formData["text"] = _textController.text;
+      _formData["movieId"] = _selectedMovie.id;
+
+      ref
+          .read(uploadComentitoProvider.notifier)
+          .uploadComentito(
+            form: _formData,
+          )
+          .then((value) {
+        _initComentito();
+      });
+    }
+  }
+
+  void _initComentito() {
+    setState(() {
+      _textController.clear();
+      _selectedMovie = MovieModel.empty();
+      _selectedDate = DateTime(0);
+      _seletedWeatherIdx = 0;
+      _seletedWithIdx = 0;
+    });
+    FocusScope.of(context).unfocus();
   }
 
   Future<void> _onDateTap() async {
@@ -68,8 +114,15 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        _formData["date"] = _selectedDate;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -278,6 +331,7 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: _textController,
                           cursorColor: const Color(
                             ThemeColors.green,
                           ),
@@ -313,8 +367,12 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                         ),
                         const Gap(16),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: _onSaveTap,
                           child: Container(
+                            constraints: const BoxConstraints(
+                              maxHeight: 54,
+                              minHeight: 54,
+                            ),
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
                               vertical: 16,
@@ -326,14 +384,21 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text(
-                              "저장",
-                              style: TextStyle(
-                                color: Color(
-                                  ThemeColors.white,
-                                ),
-                              ),
-                            ),
+                            child: ref.watch(uploadComentitoProvider).isLoading
+                                ? LoadingAnimationWidget.waveDots(
+                                    color: const Color(
+                                      ThemeColors.white,
+                                    ),
+                                    size: 20,
+                                  )
+                                : const Text(
+                                    "저장",
+                                    style: TextStyle(
+                                      color: Color(
+                                        ThemeColors.white,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

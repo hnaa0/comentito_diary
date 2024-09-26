@@ -21,7 +21,10 @@ class WeatherList extends StatelessWidget {
       itemBuilder: (context, index) {
         final weather = WeatherType.values[index];
         return GestureDetector(
-          onTap: () => onWeatherTap(index),
+          onTap: () => onWeatherTap(
+            weather: weather.name,
+            index: index,
+          ),
           child: AnimatedContainer(
             duration: const Duration(
               milliseconds: 100,

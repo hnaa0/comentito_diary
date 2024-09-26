@@ -28,7 +28,10 @@ class WatchWithList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => onWithTap(index),
+          onTap: () => onWithTap(
+            index: index,
+            watchWith: peopleList[index],
+          ),
           child: AnimatedContainer(
             duration: const Duration(
               milliseconds: 100,
