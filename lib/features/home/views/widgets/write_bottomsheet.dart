@@ -147,7 +147,7 @@ class _WriteBottomsheetState extends State<WriteBottomsheet> {
                           softWrap: false,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          _selectedMovie.originalTitle,
+                          _selectedMovie.title,
                         ),
                       ),
                     ),

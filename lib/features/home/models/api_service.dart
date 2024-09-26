@@ -7,7 +7,7 @@ class TMDBService {
   Future<List<dynamic>> searchMovies(String query) async {
     final res = await http.get(
       Uri.parse(
-          "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query"),
+          "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query&language=ko"),
     );
 
     if (res.statusCode == 200) {

@@ -176,7 +176,7 @@ class _SearchMovieScreenState extends ConsumerState<SearchMovieScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  movie.originalTitle,
+                                  movie.title,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -187,7 +187,7 @@ class _SearchMovieScreenState extends ConsumerState<SearchMovieScreen> {
                                 ),
                                 const Gap(2),
                                 Text(
-                                  movie.title,
+                                  movie.originalTitle,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
