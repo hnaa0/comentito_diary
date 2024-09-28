@@ -1,4 +1,5 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/comentito_model.dart';
 import 'package:comentito_diary/features/home/views/widgets/delete_bottomsheet.dart';
 import 'package:comentito_diary/features/home/views/widgets/movie_info.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,9 @@ class DetailScreen extends StatelessWidget {
   static const routeUrl = "detail";
   static const routeName = "detail";
 
-  const DetailScreen({super.key});
+  const DetailScreen({super.key, required this.comentito});
+
+  final ComentitoModel comentito;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +127,7 @@ class DetailScreen extends StatelessWidget {
                           ),
                           const Gap(12),
                           SvgPicture.asset(
-                            "assets/icons/weather-cloud-showers-heavy.svg",
+                            comentito.weather.url,
                             height: 25,
                             // width: 16,
                           ),
@@ -149,14 +152,20 @@ class DetailScreen extends StatelessWidget {
                             ),
                           ),
                           const Gap(12),
-                          const Text(
-                            "친구랑",
-                            style: TextStyle(
+                          Text(
+                            comentito.watchWith.korean,
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Color(
                                 ThemeColors.grey_900,
                               ),
                             ),
+                          ),
+                          const Gap(4),
+                          SvgPicture.asset(
+                            comentito.watchWith.url,
+                            height: 25,
+                            // width: 16,
                           ),
                         ],
                       ),
@@ -171,9 +180,9 @@ class DetailScreen extends StatelessWidget {
                         ),
                       ),
                       const Gap(8),
-                      const Text(
-                        "과하지 않아서 좋았다. 음악 연출 줄거리 연기 모두 최고!",
-                        style: TextStyle(
+                      Text(
+                        comentito.text,
+                        style: const TextStyle(
                           color: Color(
                             ThemeColors.grey_900,
                           ),

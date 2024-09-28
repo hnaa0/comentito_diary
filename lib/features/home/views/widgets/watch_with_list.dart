@@ -1,16 +1,7 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/watch_with_type.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-List<String> peopleList = [
-  "연인",
-  "친구",
-  "혼자",
-  "가족",
-  "부모님",
-  "형제/자매",
-  "지인",
-];
 
 class WatchWithList extends StatelessWidget {
   const WatchWithList({
@@ -27,10 +18,11 @@ class WatchWithList extends StatelessWidget {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
+        final watchWith = WatchWithType.values[index];
         return GestureDetector(
           onTap: () => onWithTap(
             index: index,
-            watchWith: peopleList[index],
+            watchWith: watchWith.name,
           ),
           child: AnimatedContainer(
             duration: const Duration(
@@ -53,7 +45,7 @@ class WatchWithList extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              peopleList[index],
+              watchWith.korean,
               style: TextStyle(
                 color: index == selectedIdx
                     ? const Color(ThemeColors.white)
@@ -64,7 +56,7 @@ class WatchWithList extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) => const Gap(4),
-      itemCount: peopleList.length,
+      itemCount: WatchWithType.values.length,
     );
   }
 }

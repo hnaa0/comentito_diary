@@ -1,5 +1,6 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
 import 'package:comentito_diary/features/home/models/movie_model.dart';
+import 'package:comentito_diary/features/home/models/watch_with_type.dart';
 import 'package:comentito_diary/features/home/models/weather_type.dart';
 import 'package:comentito_diary/features/home/view_models/upload_comentito_view_model.dart';
 import 'package:comentito_diary/features/home/views/search_movie_screen.dart';
@@ -55,15 +56,17 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
     }
 
     if (_formData["weather"] == null) {
-      _formData["weather"] = WeatherType.values[_seletedWeatherIdx].name;
+      _formData["weather"] = WeatherType.values[_seletedWeatherIdx];
     }
     if (_formData["watchWith"] == null) {
-      _formData["watchWith"] = "혼자";
+      _formData["watchWith"] = WatchWithType.values[_seletedWithIdx];
     }
 
     if (_textController.text.isNotEmpty) {
       _formData["text"] = _textController.text;
       _formData["movieId"] = _selectedMovie.id;
+      _formData["posterPath"] = _selectedMovie.posterPath;
+      _formData["title"] = _selectedMovie.title;
 
       ref
           .read(uploadComentitoProvider.notifier)

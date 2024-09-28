@@ -19,3 +19,28 @@ enum WeatherType {
         WeatherType.thunderstorm => "assets/icons/weather-thunderstorm.svg",
       };
 }
+
+extension WeatherTypeExtension on WeatherType {
+  static WeatherType fromString(String weather) {
+    switch (weather) {
+      case "clear":
+        return WeatherType.clear;
+      case "partlyCloudy":
+        return WeatherType.partlyCloudy;
+      case "cloudy":
+        return WeatherType.cloudy;
+      case "windy":
+        return WeatherType.windy;
+      case "rain":
+        return WeatherType.rain;
+      case "showers":
+        return WeatherType.showers;
+      case "snow":
+        return WeatherType.snow;
+      case "thunderstorm":
+        return WeatherType.thunderstorm;
+      default:
+        throw Exception("Invalid type");
+    }
+  }
+}

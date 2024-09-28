@@ -1,10 +1,13 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/comentito_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
 class ComentitoCard extends StatelessWidget {
-  const ComentitoCard({super.key});
+  const ComentitoCard({super.key, required this.comentito});
+
+  final ComentitoModel comentito;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class ComentitoCard extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 3 / 4,
               child: Image.network(
-                "https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240820_178%2F1724133122047df9TH_JPEG%2Fmovie_image.jpg",
+                "https://image.tmdb.org/t/p/w500/${comentito.posterPath}",
                 height: 175,
                 fit: BoxFit.cover,
               ),
@@ -62,10 +65,11 @@ class ComentitoCard extends StatelessWidget {
                   vertical: 10,
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "비긴 어게인",
-                      style: TextStyle(
+                    Text(
+                      comentito.title,
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Color(
                           ThemeColors.grey_900,
@@ -77,7 +81,7 @@ class ComentitoCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         SvgPicture.asset(
-                          "assets/icons/weather-cloud-showers-heavy.svg",
+                          comentito.weather.url,
                           width: 28,
                           colorFilter: const ColorFilter.mode(
                             Color(ThemeColors.grey_700),
@@ -86,7 +90,7 @@ class ComentitoCard extends StatelessWidget {
                         ),
                         const Gap(10),
                         SvgPicture.asset(
-                          "assets/icons/woman.svg",
+                          comentito.watchWith.url,
                           width: 28,
                           colorFilter: const ColorFilter.mode(
                             Color(ThemeColors.grey_700),

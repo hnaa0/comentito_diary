@@ -35,12 +35,14 @@ class UploadComentitoViewModel extends AsyncNotifier<void> {
         watchWith: form["watchWith"],
         text: form["text"],
         date: form["date"],
+        posterPath: form["posterPath"],
+        title: form["title"],
       );
     });
 
-    // if (state.hasError) {
-    //   print("Upload failed with error: ${state.error}");
-    // }
+    if (state.hasError) {
+      print(state.error);
+    }
   }
 }
 

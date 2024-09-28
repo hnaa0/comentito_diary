@@ -1,23 +1,77 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/comentito_model.dart';
+import 'package:comentito_diary/features/home/view_models/fetch_comentito_view_model.dart';
 import 'package:comentito_diary/features/home/views/day_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class HomeCalendar extends StatefulWidget {
+class HomeCalendar extends ConsumerStatefulWidget {
   const HomeCalendar({super.key});
 
   @override
-  State<HomeCalendar> createState() => _HomeCalendarState();
+  ConsumerState<HomeCalendar> createState() => _HomeCalendarState();
 }
 
-class _HomeCalendarState extends State<HomeCalendar> {
+class _HomeCalendarState extends ConsumerState<HomeCalendar> {
+  final DateTime _today = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  late DateTime _firstDay;
+  late DateTime _lastDay;
+  late ValueNotifier<List<ComentitoModel>> _selectedEvents;
+  Map<DateTime, List<ComentitoModel>> _eventsList = {};
+
+  Map<DateTime, List<ComentitoModel>> _groupingComentitos(
+      List<ComentitoModel> comentitos) {
+    Map<DateTime, List<ComentitoModel>> data = {};
+
+    for (var comentito in comentitos) {
+      final date = DateTime(
+          comentito.date.year, comentito.date.month, comentito.date.day);
+
+      if (data[date] == null) {
+        data[date] = [comentito];
+      } else {
+        data[date]!.add(comentito);
+      }
+    }
+
+    return data;
+  }
+
+  List<ComentitoModel> _getEventsForDay(DateTime day) {
+    return _eventsList[DateTime(day.year, day.month, day.day)] ?? [];
+  }
+
+  Future<void> _fetchComentitos() async {
+    final startDate = DateTime(_focusedDay.year, _focusedDay.month, 1);
+    final endDate = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+
+    List<ComentitoModel> result =
+        await ref.read(fetchComentitoProvider.notifier).fetchComentitos(
+              startDate: startDate,
+              endDate: endDate,
+            );
+
+    setState(() {
+      _eventsList = _groupingComentitos(result);
+    });
+
+    _selectedEvents.value = _getEventsForDay(_focusedDay);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _firstDay = DateTime(2023, 1, 1);
+    _lastDay = DateTime(_today.year, _today.month + 1, 0);
+    _selectedEvents = ValueNotifier([]);
+    _fetchComentitos();
+  }
+
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-    DateTime firstDay = DateTime(2023, 1, 1);
-    DateTime lastDay = DateTime(today.year, today.month + 1, 0);
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
@@ -35,18 +89,30 @@ class _HomeCalendarState extends State<HomeCalendar> {
         ],
       ),
       child: TableCalendar(
+        eventLoader: _getEventsForDay,
+        onPageChanged: (focusedDay) {
+          setState(() {
+            _focusedDay = focusedDay;
+            focusedDay = focusedDay;
+          });
+          _fetchComentitos();
+        },
         onDaySelected: (selectedDay, focusedDay) {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DayScreen(
-                  selectedDay: selectedDay,
-                ),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => DayScreen(
+                selectedDay: selectedDay,
+                comentitos: _eventsList[DateTime(selectedDay.year,
+                        selectedDay.month, selectedDay.day)] ??
+                    [],
+              ),
+            ),
+          );
         },
-        focusedDay: today,
-        firstDay: firstDay,
-        lastDay: lastDay,
+        focusedDay: _focusedDay,
+        firstDay: _firstDay,
+        lastDay: _lastDay,
         rowHeight: 68,
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
@@ -88,6 +154,24 @@ class _HomeCalendarState extends State<HomeCalendar> {
           },
         ),
         calendarBuilders: CalendarBuilders(
+          markerBuilder: (context, day, events) {
+            if (events.isNotEmpty) {
+              final event = events[0] as ComentitoModel;
+              return Container(
+                height: 68,
+                width: (MediaQuery.of(context).size.width / 7),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      "https://image.tmdb.org/t/p/w500/${event.posterPath}",
+                    ),
+                  ),
+                ),
+              );
+            }
+            return null;
+          },
           defaultBuilder: (context, day, focusedDay) {
             if (day.weekday == DateTime.sunday) {
               return Center(
