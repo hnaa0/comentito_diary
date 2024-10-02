@@ -37,11 +37,14 @@ class UploadComentitoViewModel extends AsyncNotifier<void> {
         date: form["date"],
         posterPath: form["posterPath"],
         title: form["title"],
+        genres: form["genres"],
+        actors: form["actors"],
+        directors: form["directors"],
       );
     });
 
     if (state.hasError) {
-      print(state.error);
+      throw Exception(state.error);
     }
   }
 }

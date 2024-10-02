@@ -14,6 +14,9 @@ class ComentitoRepository {
     required DateTime date,
     required String posterPath,
     required String title,
+    required List<dynamic> genres,
+    required List<dynamic> actors,
+    required List<dynamic> directors,
   }) async {
     final comentito = {
       "movieId": movieId,
@@ -24,6 +27,9 @@ class ComentitoRepository {
       "date": Timestamp.fromDate(date),
       "posterPath": posterPath,
       "title": title,
+      "genres": genres,
+      "actors": actors,
+      "directors": directors,
     };
     final docRef = await _db.collection("comentitos").add(comentito);
     final docId = docRef.id;
@@ -47,6 +53,10 @@ class ComentitoRepository {
       return ComentitoModel.fromJson(json: doc.data());
     }).toList();
     return comentitos;
+  }
+
+  Future<void> deleteComentito(String id) async {
+    await _db.collection("comentitos").doc(id).delete();
   }
 }
 

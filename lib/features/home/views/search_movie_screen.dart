@@ -1,5 +1,5 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
-import 'package:comentito_diary/features/home/models/api_service.dart';
+import 'package:comentito_diary/features/home/repos/api_service.dart';
 import 'package:comentito_diary/features/home/models/movie_model.dart';
 import 'package:comentito_diary/features/home/view_models/search_movie_view_model.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +138,9 @@ class _SearchMovieScreenState extends ConsumerState<SearchMovieScreen> {
                     ],
                   ),
                 ),
+                onSubmitted: (value) {
+                  _onSearchTap();
+                },
               ),
               const Gap(18),
               Expanded(
@@ -149,8 +152,17 @@ class _SearchMovieScreenState extends ConsumerState<SearchMovieScreen> {
 
                     return GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        context.pop(movie);
+                      onTap: () async {
+                        final detail = await ref
+                            .read(searchMovieProvider.notifier)
+                            .getMovieDetail(movieId: movie.id);
+
+                        if (mounted) {
+                          context.pop({
+                            "movie": movie,
+                            "detail": detail,
+                          });
+                        }
                       },
                       child: SizedBox(
                         height: 160,

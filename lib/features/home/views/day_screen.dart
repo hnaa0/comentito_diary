@@ -1,15 +1,17 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
 import 'package:comentito_diary/features/home/models/comentito_model.dart';
+import 'package:comentito_diary/features/home/view_models/home_calendar_view_model.dart';
 import 'package:comentito_diary/features/home/views/detail_screen.dart';
 import 'package:comentito_diary/features/home/views/widgets/comentito_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class DayScreen extends StatelessWidget {
+class DayScreen extends ConsumerStatefulWidget {
   static const routeUrl = "day";
   static const routeName = "day";
 
@@ -23,6 +25,11 @@ class DayScreen extends StatelessWidget {
   });
 
   @override
+  ConsumerState<DayScreen> createState() => _DayScreenState();
+}
+
+class _DayScreenState extends ConsumerState<DayScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(
@@ -34,7 +41,7 @@ class DayScreen extends StatelessWidget {
         toolbarHeight: 56,
         centerTitle: true,
         title: Text(
-          '${DateFormat("M/d").format(selectedDay)} COMENTITO',
+          '${DateFormat("M/d").format(widget.selectedDay)} COMENTITO',
           style: const TextStyle(
             color: Color(
               ThemeColors.green,
@@ -45,7 +52,10 @@ class DayScreen extends StatelessWidget {
         leading: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
-            context.pop();
+            context.pop(context);
+            ref
+                .read(calendarProvider.notifier)
+                .updateSelectedEvents(widget.comentitos);
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -67,7 +77,7 @@ class DayScreen extends StatelessWidget {
           vertical: 40,
           horizontal: 32,
         ),
-        child: comentitos.isEmpty
+        child: widget.comentitos.isEmpty
             ? const Center(
                 child: Text(
                   "기록된 COMENTITO가 없어요!",
@@ -86,19 +96,25 @@ class DayScreen extends StatelessWidget {
                     child: ListView.separated(
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        final comentito = comentitos[index];
-                        print(comentito);
+                        final comentito = widget.comentitos[index];
                         return GestureDetector(
-                            onTap: () {
-                              context.pushNamed(
+                            onTap: () async {
+                              final result = await context.pushNamed(
                                 DetailScreen.routeName,
                                 extra: comentito,
                               );
+
+                              if (result != null) {
+                                setState(() {
+                                  widget.comentitos.removeWhere((item) =>
+                                      item.id == (result as ComentitoModel).id);
+                                });
+                              }
                             },
                             child: ComentitoCard(comentito: comentito));
                       },
                       separatorBuilder: (context, index) => const Gap(20),
-                      itemCount: comentitos.length,
+                      itemCount: widget.comentitos.length,
                     ),
                   ),
                 ],

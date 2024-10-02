@@ -1,4 +1,5 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/movie_detail_model.dart';
 import 'package:comentito_diary/features/home/models/movie_model.dart';
 import 'package:comentito_diary/features/home/models/watch_with_type.dart';
 import 'package:comentito_diary/features/home/models/weather_type.dart';
@@ -26,6 +27,7 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
   int _seletedWithIdx = 0;
   DateTime _selectedDate = DateTime(0);
   MovieModel _selectedMovie = MovieModel.empty();
+  MovieDetailModel _selectedMovieDetail = MovieDetailModel.empty();
   final DateTime today = DateTime.now();
   final TextEditingController _textController = TextEditingController();
   final Map<String, dynamic> _formData = {};
@@ -43,10 +45,10 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
     });
   }
 
-  void _onWithTap({required int index, required String watchWith}) {
+  void _onWithTap({required int index, required WatchWithType watchWith}) {
     setState(() {
       _seletedWithIdx = index;
-      _formData["watchWith"] = watchWith;
+      _formData["watchWith"] = watchWith.name;
     });
   }
 
@@ -56,10 +58,10 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
     }
 
     if (_formData["weather"] == null) {
-      _formData["weather"] = WeatherType.values[_seletedWeatherIdx];
+      _formData["weather"] = WeatherType.values[_seletedWeatherIdx].name;
     }
     if (_formData["watchWith"] == null) {
-      _formData["watchWith"] = WatchWithType.values[_seletedWithIdx];
+      _formData["watchWith"] = WatchWithType.values[_seletedWithIdx].name;
     }
 
     if (_textController.text.isNotEmpty) {
@@ -67,6 +69,9 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
       _formData["movieId"] = _selectedMovie.id;
       _formData["posterPath"] = _selectedMovie.posterPath;
       _formData["title"] = _selectedMovie.title;
+      _formData["genres"] = _selectedMovieDetail.genres;
+      _formData["actors"] = _selectedMovieDetail.actors;
+      _formData["directors"] = _selectedMovieDetail.directors;
 
       ref
           .read(uploadComentitoProvider.notifier)
@@ -169,11 +174,13 @@ class _WriteBottomsheetState extends ConsumerState<WriteBottomsheet> {
                   const Gap(14),
                   GestureDetector(
                     onTap: () async {
-                      final movie =
+                      final result =
                           await context.pushNamed(SearchMovieScreen.routeName);
 
-                      if (movie != null) {
-                        _selectedMovie = movie as MovieModel;
+                      if (result != null && result is Map<String, dynamic>) {
+                        _selectedMovie = result["movie"] as MovieModel;
+                        _selectedMovieDetail =
+                            result["detail"] as MovieDetailModel;
                       }
                     },
                     child: Container(

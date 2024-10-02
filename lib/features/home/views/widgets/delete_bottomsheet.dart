@@ -1,13 +1,24 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/comentito_model.dart';
+import 'package:comentito_diary/features/home/view_models/fetch_comentito_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
-class DeleteBottomsheet extends StatelessWidget {
-  const DeleteBottomsheet({super.key});
+class DeleteBottomsheet extends ConsumerWidget {
+  const DeleteBottomsheet({
+    super.key,
+    required this.comentito,
+  });
+
+  final ComentitoModel comentito;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 20,
@@ -39,41 +50,55 @@ class DeleteBottomsheet extends StatelessWidget {
             ),
           ),
           const Gap(36),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(
-              vertical: 16,
-            ),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: const Color(
-                ThemeColors.green,
+          GestureDetector(
+            onTap: () async {
+              await ref
+                  .read(fetchComentitoProvider.notifier)
+                  .deleteComentito(id: comentito.id);
+              context.pop();
+              context.pop(comentito);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
               ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Text(
-              "네 삭제할게요",
-              style: TextStyle(
-                color: Color(
-                  ThemeColors.white,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: const Color(
+                  ThemeColors.green,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "네 삭제할게요",
+                style: TextStyle(
+                  color: Color(
+                    ThemeColors.white,
+                  ),
                 ),
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(
-              vertical: 16,
-            ),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Text(
-              "아니요",
-              style: TextStyle(
-                color: Color(
-                  ThemeColors.green,
+          GestureDetector(
+            onTap: () {
+              context.pop();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "아니요",
+                style: TextStyle(
+                  color: Color(
+                    ThemeColors.green,
+                  ),
                 ),
               ),
             ),

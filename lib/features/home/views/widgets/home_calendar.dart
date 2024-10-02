@@ -8,7 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomeCalendar extends ConsumerStatefulWidget {
-  const HomeCalendar({super.key});
+  const HomeCalendar({
+    super.key,
+    required this.focusedDay,
+    required this.onDayChanged,
+  });
+
+  final DateTime focusedDay;
+  final Function(DateTime) onDayChanged;
 
   @override
   ConsumerState<HomeCalendar> createState() => _HomeCalendarState();
@@ -16,7 +23,7 @@ class HomeCalendar extends ConsumerStatefulWidget {
 
 class _HomeCalendarState extends ConsumerState<HomeCalendar> {
   final DateTime _today = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
+  final DateTime _focusedDay = DateTime.now();
   late DateTime _firstDay;
   late DateTime _lastDay;
   late ValueNotifier<List<ComentitoModel>> _selectedEvents;
@@ -91,9 +98,13 @@ class _HomeCalendarState extends ConsumerState<HomeCalendar> {
       child: TableCalendar(
         eventLoader: _getEventsForDay,
         onPageChanged: (focusedDay) {
+          // setState(() {
+          //   _focusedDay = focusedDay;
+          //   focusedDay = focusedDay;
+          // });
+          // _fetchComentitos();
           setState(() {
-            _focusedDay = focusedDay;
-            focusedDay = focusedDay;
+            widget.onDayChanged(focusedDay);
           });
           _fetchComentitos();
         },
@@ -109,8 +120,9 @@ class _HomeCalendarState extends ConsumerState<HomeCalendar> {
               ),
             ),
           );
+          _fetchComentitos();
         },
-        focusedDay: _focusedDay,
+        focusedDay: widget.focusedDay,
         firstDay: _firstDay,
         lastDay: _lastDay,
         rowHeight: 68,

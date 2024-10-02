@@ -46,7 +46,9 @@ class DetailScreen extends StatelessWidget {
                 elevation: 0,
                 context: context,
                 builder: (context) {
-                  return const DeleteBottomsheet();
+                  return DeleteBottomsheet(
+                    comentito: comentito,
+                  );
                 },
               );
             },
@@ -200,7 +202,9 @@ class DetailScreen extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.06,
             left: 0,
             right: 0,
-            child: const MovieInfo(),
+            child: MovieInfo(
+              comentito: comentito,
+            ),
           ),
         ],
       ),

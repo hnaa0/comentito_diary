@@ -23,6 +23,10 @@ class FetchComentitoViewModel extends AsyncNotifier<void> {
 
     return result;
   }
+
+  Future<void> deleteComentito({required String id}) async {
+    await ref.read(comentitoRepo).deleteComentito(id);
+  }
 }
 
 final fetchComentitoProvider =

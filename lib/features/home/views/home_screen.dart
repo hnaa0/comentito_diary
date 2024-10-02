@@ -1,21 +1,25 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/view_models/home_calendar_view_model.dart';
 import 'package:comentito_diary/features/home/views/widgets/end_drawer.dart';
 import 'package:comentito_diary/features/home/views/widgets/home_calendar.dart';
 import 'package:comentito_diary/features/home/views/widgets/write_bottomsheet.dart';
 import 'package:customizable_text/customizable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   static const routeUrl = "/home";
   static const routeName = "home";
 
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final calendarState = ref.watch(calendarProvider);
+
     return Scaffold(
       backgroundColor: const Color(
         ThemeColors.mintCream,
@@ -73,122 +77,128 @@ class HomeScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   children: [
-                    const HomeCalendar(),
+                    HomeCalendar(
+                        focusedDay: calendarState.focusedDay,
+                        onDayChanged: (day) {
+                          ref
+                              .read(calendarProvider.notifier)
+                              .updateFocusedDay(day);
+                        }),
                     const Gap(36),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 26,
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                ThemeColors.white,
-                              ),
-                              border: Border.all(
-                                color: const Color(
-                                  ThemeColors.mintGreen,
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(
-                                    ThemeColors.grey_200,
-                                  ),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: const CustomizableText(
-                              "9월에 기록된 COMENTITO는 총 5개입니다.",
-                              style: TextStyle(
-                                color: Color(
-                                  ThemeColors.grey_800,
-                                ),
-                              ),
-                              customStyle: TextStyle(
-                                color: Color(ThemeColors.green),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                              customizes: [
-                                CustomText(
-                                  "5개",
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Gap(20),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                ThemeColors.white,
-                              ),
-                              border: Border.all(
-                                color: const Color(
-                                  ThemeColors.mintGreen,
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(
-                                    ThemeColors.grey_200,
-                                  ),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "9월에 가장 많이 관람한 장르는",
-                                  style: TextStyle(
-                                    color: Color(
-                                      ThemeColors.grey_800,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "액션, SF, 코미디",
-                                      style: TextStyle(
-                                        color: Color(
-                                          ThemeColors.green,
-                                        ),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Text(
-                                      "입니다.",
-                                      style: TextStyle(
-                                        color: Color(
-                                          ThemeColors.grey_800,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      // child: Column(
+                      //   children: [
+                      //     Container(
+                      //       width: MediaQuery.of(context).size.width,
+                      //       padding: const EdgeInsets.symmetric(
+                      //         horizontal: 12,
+                      //         vertical: 14,
+                      //       ),
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(
+                      //           ThemeColors.white,
+                      //         ),
+                      //         border: Border.all(
+                      //           color: const Color(
+                      //             ThemeColors.mintGreen,
+                      //           ),
+                      //         ),
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         boxShadow: const [
+                      //           BoxShadow(
+                      //             color: Color(
+                      //               ThemeColors.grey_200,
+                      //             ),
+                      //             blurRadius: 4,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       child: const CustomizableText(
+                      //         "9월에 기록된 COMENTITO는 총 5개입니다.",
+                      //         style: TextStyle(
+                      //           color: Color(
+                      //             ThemeColors.grey_800,
+                      //           ),
+                      //         ),
+                      //         customStyle: TextStyle(
+                      //           color: Color(ThemeColors.green),
+                      //           fontWeight: FontWeight.w600,
+                      //           fontSize: 16,
+                      //         ),
+                      //         customizes: [
+                      //           CustomText(
+                      //             "5개",
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     const Gap(20),
+                      //     Container(
+                      //       width: MediaQuery.of(context).size.width,
+                      //       padding: const EdgeInsets.symmetric(
+                      //         horizontal: 12,
+                      //         vertical: 14,
+                      //       ),
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(
+                      //           ThemeColors.white,
+                      //         ),
+                      //         border: Border.all(
+                      //           color: const Color(
+                      //             ThemeColors.mintGreen,
+                      //           ),
+                      //         ),
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         boxShadow: const [
+                      //           BoxShadow(
+                      //             color: Color(
+                      //               ThemeColors.grey_200,
+                      //             ),
+                      //             blurRadius: 4,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       child: const Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           Text(
+                      //             "9월에 가장 많이 관람한 장르는",
+                      //             style: TextStyle(
+                      //               color: Color(
+                      //                 ThemeColors.grey_800,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Row(
+                      //             children: [
+                      //               Text(
+                      //                 "액션, SF, 코미디",
+                      //                 style: TextStyle(
+                      //                   color: Color(
+                      //                     ThemeColors.green,
+                      //                   ),
+                      //                   fontWeight: FontWeight.w600,
+                      //                   fontSize: 16,
+                      //                 ),
+                      //               ),
+                      //               Text(
+                      //                 "입니다.",
+                      //                 style: TextStyle(
+                      //                   color: Color(
+                      //                     ThemeColors.grey_800,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ),
                     const Gap(60),
                   ],

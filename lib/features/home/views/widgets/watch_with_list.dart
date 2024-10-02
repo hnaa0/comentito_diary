@@ -22,7 +22,7 @@ class WatchWithList extends StatelessWidget {
         return GestureDetector(
           onTap: () => onWithTap(
             index: index,
-            watchWith: watchWith.name,
+            watchWith: watchWith,
           ),
           child: AnimatedContainer(
             duration: const Duration(

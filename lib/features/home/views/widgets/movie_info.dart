@@ -1,10 +1,23 @@
 import 'package:comentito_diary/constants/theme_colors.dart';
+import 'package:comentito_diary/features/home/models/comentito_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class MovieInfo extends StatelessWidget {
-  const MovieInfo({super.key});
+class MovieInfo extends ConsumerStatefulWidget {
+  const MovieInfo({
+    super.key,
+    required this.comentito,
+  });
 
+  final ComentitoModel comentito;
+
+  @override
+  ConsumerState<MovieInfo> createState() => _MovieInfoState();
+}
+
+class _MovieInfoState extends ConsumerState<MovieInfo> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,9 +27,9 @@ class MovieInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "비긴 어게인",
-            style: TextStyle(
+          Text(
+            widget.comentito.title,
+            style: const TextStyle(
               color: Color(
                 ThemeColors.green,
               ),
@@ -34,9 +47,9 @@ class MovieInfo extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image: const DecorationImage(
+                      image: DecorationImage(
                         image: NetworkImage(
-                          "https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240820_178%2F1724133122047df9TH_JPEG%2Fmovie_image.jpg",
+                          "https://image.tmdb.org/t/p/w500/${widget.comentito.posterPath}",
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -53,14 +66,14 @@ class MovieInfo extends StatelessWidget {
                 ),
               ),
               const Gap(14),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "감독",
                           style: TextStyle(
                             color: Color(
@@ -68,24 +81,30 @@ class MovieInfo extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Gap(10),
+                        const Gap(10),
                         Expanded(
-                          child: Text(
-                            "존 카니",
-                            style: TextStyle(
-                              color: Color(
-                                ThemeColors.grey_800,
-                              ),
-                            ),
+                          child: Wrap(
+                            spacing: 8,
+                            children: [
+                              for (var director in widget.comentito.directors)
+                                Text(
+                                  director["name"],
+                                  style: const TextStyle(
+                                    color: Color(
+                                      ThemeColors.grey_800,
+                                    ),
+                                  ),
+                                )
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    Gap(10),
+                    const Gap(10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "장르",
                           style: TextStyle(
                             color: Color(
@@ -93,24 +112,30 @@ class MovieInfo extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Gap(10),
+                        const Gap(10),
                         Expanded(
-                          child: Text(
-                            "드라마, 멜로/로맨스, 코미디",
-                            style: TextStyle(
-                              color: Color(
-                                ThemeColors.grey_800,
-                              ),
-                            ),
+                          child: Wrap(
+                            spacing: 6,
+                            children: [
+                              for (var genre in widget.comentito.genres)
+                                Text(
+                                  genre["name"],
+                                  style: const TextStyle(
+                                    color: Color(
+                                      ThemeColors.grey_800,
+                                    ),
+                                  ),
+                                )
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    Gap(10),
+                    const Gap(10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "배우",
                           style: TextStyle(
                             color: Color(
@@ -118,15 +143,21 @@ class MovieInfo extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Gap(10),
+                        const Gap(10),
                         Expanded(
-                          child: Text(
-                            "키이라 나이틀리, 마크 러팔로, 애덤 리바인",
-                            style: TextStyle(
-                              color: Color(
-                                ThemeColors.grey_800,
-                              ),
-                            ),
+                          child: Wrap(
+                            spacing: 8,
+                            children: [
+                              for (var actor in widget.comentito.actors)
+                                Text(
+                                  actor["name"],
+                                  style: const TextStyle(
+                                    color: Color(
+                                      ThemeColors.grey_800,
+                                    ),
+                                  ),
+                                )
+                            ],
                           ),
                         ),
                       ],

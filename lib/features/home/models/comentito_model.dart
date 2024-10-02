@@ -12,6 +12,9 @@ class ComentitoModel {
   final String text;
   final DateTime date;
   final String posterPath;
+  final List<dynamic> genres;
+  final List<dynamic> actors;
+  final List<dynamic> directors;
 
   ComentitoModel({
     this.id = "",
@@ -23,6 +26,9 @@ class ComentitoModel {
     required this.text,
     required this.date,
     required this.posterPath,
+    required this.genres,
+    required this.actors,
+    required this.directors,
   });
 
   ComentitoModel.fromJson({required Map<String, dynamic> json})
@@ -34,5 +40,8 @@ class ComentitoModel {
         watchWith = WatchWithTypeExtension.fromString(json["watchWith"]),
         text = json["text"],
         date = (json["date"] as Timestamp).toDate(),
-        posterPath = json["posterPath"];
+        posterPath = json["posterPath"],
+        genres = json["genres"],
+        actors = json["actors"],
+        directors = json["directors"];
 }
