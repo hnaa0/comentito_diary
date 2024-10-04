@@ -80,6 +80,7 @@ class DeleteBottomsheet extends ConsumerWidget {
               ),
             ),
           ),
+          const Gap(6),
           GestureDetector(
             onTap: () {
               context.pop();
