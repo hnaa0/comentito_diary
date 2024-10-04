@@ -84,17 +84,22 @@ class _MovieInfoState extends ConsumerState<MovieInfo> {
                         const Gap(10),
                         Expanded(
                           child: Wrap(
-                            spacing: 8,
+                            runSpacing: 2,
                             children: [
-                              for (var director in widget.comentito.directors)
+                              for (var i = 0;
+                                  i < widget.comentito.directors.length;
+                                  i++) ...[
                                 Text(
-                                  director["name"],
+                                  widget.comentito.directors[i]["name"],
                                   style: const TextStyle(
                                     color: Color(
                                       ThemeColors.grey_800,
                                     ),
                                   ),
-                                )
+                                ),
+                                if (i != widget.comentito.directors.length - 1)
+                                  const Text(", "),
+                              ]
                             ],
                           ),
                         ),
@@ -115,17 +120,22 @@ class _MovieInfoState extends ConsumerState<MovieInfo> {
                         const Gap(10),
                         Expanded(
                           child: Wrap(
-                            spacing: 6,
+                            runSpacing: 2,
                             children: [
-                              for (var genre in widget.comentito.genres)
+                              for (var i = 0;
+                                  i < widget.comentito.genres.length;
+                                  i++) ...[
                                 Text(
-                                  genre["name"],
+                                  widget.comentito.genres[i]["name"],
                                   style: const TextStyle(
                                     color: Color(
                                       ThemeColors.grey_800,
                                     ),
                                   ),
-                                )
+                                ),
+                                if (i != widget.comentito.genres.length - 1)
+                                  const Text(", "),
+                              ]
                             ],
                           ),
                         ),
@@ -146,17 +156,22 @@ class _MovieInfoState extends ConsumerState<MovieInfo> {
                         const Gap(10),
                         Expanded(
                           child: Wrap(
-                            spacing: 8,
+                            runSpacing: 2,
                             children: [
-                              for (var actor in widget.comentito.actors)
+                              for (var i = 0;
+                                  i < widget.comentito.actors.length;
+                                  i++) ...[
                                 Text(
-                                  actor["name"],
+                                  widget.comentito.actors[i]["name"],
                                   style: const TextStyle(
                                     color: Color(
                                       ThemeColors.grey_800,
                                     ),
                                   ),
-                                )
+                                ),
+                                if (i != widget.comentito.actors.length - 1)
+                                  const Text(", "),
+                              ]
                             ],
                           ),
                         ),
