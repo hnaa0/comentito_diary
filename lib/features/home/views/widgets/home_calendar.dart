@@ -23,7 +23,7 @@ class HomeCalendar extends ConsumerStatefulWidget {
 
 class _HomeCalendarState extends ConsumerState<HomeCalendar> {
   final DateTime _today = DateTime.now();
-  final DateTime _focusedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   late DateTime _firstDay;
   late DateTime _lastDay;
   late ValueNotifier<List<ComentitoModel>> _selectedEvents;
@@ -75,6 +75,17 @@ class _HomeCalendarState extends ConsumerState<HomeCalendar> {
     _lastDay = DateTime(_today.year, _today.month + 1, 0);
     _selectedEvents = ValueNotifier([]);
     _fetchComentitos();
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.focusedDay != oldWidget.focusedDay) {
+      setState(() {
+        _focusedDay = widget.focusedDay;
+      });
+      _fetchComentitos();
+    }
   }
 
   @override

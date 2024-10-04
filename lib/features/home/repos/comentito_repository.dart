@@ -45,8 +45,8 @@ class ComentitoRepository {
     final data = await _db
         .collection("comentitos")
         .where("uId", isEqualTo: uid)
-        .where('date', isGreaterThanOrEqualTo: startDate)
-        .where('date', isLessThanOrEqualTo: endDate)
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
         .get();
 
     final comentitos = data.docs.map((doc) {
